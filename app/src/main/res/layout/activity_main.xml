@@ -1,0 +1,156 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:id="@+id/homePanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <Space android:layout_width="1dp" android:layout_height="32dp" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="78dp"
+            android:layout_height="78dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="PakKom Exambro" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="PakKom Exambro"
+            android:textColor="@color/navy"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Secure Examination Browser"
+            android:textColor="@color/muted"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Persiapan Perangkat"
+                android:textColor="@color/text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView android:id="@+id/networkStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="• Memeriksa koneksi internet..." android:textColor="@color/muted" android:textSize="15sp" />
+            <TextView android:id="@+id/securityStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="✓ Pencegahan tangkapan layar siap" android:textColor="@color/green" android:textSize="15sp" />
+            <TextView android:id="@+id/kioskStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="✓ Mode ujian siap" android:textColor="@color/green" android:textSize="15sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Saat ujian dimulai, navigasi perangkat akan dibatasi. Mode ujian dilepas kembali setelah ujian selesai atau melalui Emergency Exit guru."
+            android:textColor="@color/muted"
+            android:textSize="13sp" />
+
+        <Space android:layout_width="1dp" android:layout_height="0dp" android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:text="MULAI EXAMBRO"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="PakKom Exambro • V5.0"
+            android:textColor="@color/muted"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/examPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/examBar"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@color/navy"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <ImageView
+                android:id="@+id/examLogo"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:src="@drawable/ic_launcher"
+                android:contentDescription="PakKom" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="PakKom Exambro"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/examStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● MODE UJIAN"
+                android:textColor="#78E09B"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/finishPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:visibility="gone">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="✓" android:textColor="@color/green" android:textSize="64sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="UJIAN TELAH SELESAI" android:textColor="@color/navy" android:textSize="24sp" android:textStyle="bold" />
+        <TextView android:id="@+id/finishMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:gravity="center" android:text="Mode ujian telah dilepas dan navigasi perangkat dipulihkan." android:textColor="@color/muted" android:textSize="15sp" />
+        <Button android:id="@+id/closeButton" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginTop="28dp" android:text="SELESAI" android:textAllCaps="false" />
+    </LinearLayout>
+</FrameLayout>
