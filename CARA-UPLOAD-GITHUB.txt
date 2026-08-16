@@ -1,0 +1,23 @@
+PAKKOM EXAMBRO V5 - CARA UPLOAD
+
+1. Ekstrak ZIP.
+2. Buka repository Android PakKom Exambro di GitHub.
+3. Hapus isi project Android lama bila ingin benar-benar mengganti versi lama, tetapi jangan hapus repository-nya.
+4. Upload SEMUA isi folder PakKomExambroV5 ke ROOT repository.
+5. Pastikan file berikut terlihat di root:
+   - build.gradle.kts
+   - settings.gradle.kts
+   - gradle.properties
+   - app/
+   - .github/workflows/build-apk.yml
+6. Commit changes.
+7. Buka tab Actions.
+8. Pilih "Build PakKom Exambro V5 APK".
+9. Klik Run workflow.
+10. Setelah hijau, unduh artifact "PakKom-Exambro-V5.0-APK".
+
+PIN EMERGENCY EXIT DEFAULT: 2468
+Cara membuka: saat ujian tekan logo PakKom 5 kali cepat, lalu masukkan PIN.
+
+PENTING:
+Integrasikan web selesai ujian dengan JavaScript PakKomExambro.finishExam() agar APK dapat melepas mode terkunci otomatis saat ujian selesai.
