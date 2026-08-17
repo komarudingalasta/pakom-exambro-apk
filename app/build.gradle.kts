@@ -10,19 +10,21 @@ android {
         applicationId = "id.pakkom.exambro"
         minSdk = 26
         targetSdk = 36
-        versionCode = 500
-        versionName = "5.0.0"
+        versionCode = 510
+        versionName = "5.1.0"
     }
 
     buildFeatures {
-        viewBinding = false
         buildConfig = true
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

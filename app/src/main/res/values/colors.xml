@@ -1,12 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="navy">#0B1F3A</color>
-    <color name="blue">#1769E0</color>
-    <color name="blue_light">#EAF2FF</color>
-    <color name="green">#1F9D55</color>
-    <color name="amber">#D97706</color>
-    <color name="red">#C62828</color>
+    <color name="blue">#176BFF</color>
+    <color name="blue_soft">#EAF2FF</color>
+    <color name="green">#168A50</color>
+    <color name="green_soft">#EAF8F0</color>
+    <color name="amber">#B76A00</color>
+    <color name="red">#B42318</color>
     <color name="bg">#F5F7FB</color>
-    <color name="text">#14213D</color>
-    <color name="muted">#637083</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text">#182230</color>
+    <color name="muted">#667085</color>
     <color name="white">#FFFFFF</color>
+    <color name="divider">#E4E7EC</color>
 </resources>

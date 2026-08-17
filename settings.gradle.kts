@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PakKomExambroV5"
+rootProject.name = "PakKomExambro"
 include(":app")

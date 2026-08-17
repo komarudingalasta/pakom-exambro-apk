@@ -1,12 +1,23 @@
-name: Build PakKom Exambro V5 APK
+name: Build PakKom Exambro V5.1 APK
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/build-apk.yml'
 
 permissions:
   contents: read
+
+concurrency:
+  group: pakkom-exambro-v51-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -14,7 +25,7 @@ jobs:
     timeout-minutes: 25
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v5
 
       - name: Set up JDK 17
@@ -26,38 +37,49 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install SDK packages
-        run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;35.0.0"
+      - name: Accept Android licenses
+        shell: bash
+        run: yes | sdkmanager --licenses > /dev/null || true
+
+      - name: Install Android SDK 36
+        shell: bash
+        run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;35.0.0"
 
       - name: Install Gradle 8.13
+        shell: bash
         run: |
-          wget -q https://services.gradle.org/distributions/gradle-8.13-bin.zip -O /tmp/gradle.zip
-          unzip -q /tmp/gradle.zip -d /opt/gradle
+          wget -q https://services.gradle.org/distributions/gradle-8.13-bin.zip -O /tmp/gradle-8.13.zip
+          unzip -q /tmp/gradle-8.13.zip -d /opt/gradle
           echo "/opt/gradle/gradle-8.13/bin" >> "$GITHUB_PATH"
 
-      - name: Verify structure
+      - name: Verify project structure
+        shell: bash
         run: |
+          set -e
           test -f build.gradle.kts
           test -f settings.gradle.kts
           test -f app/build.gradle.kts
           test -f app/src/main/AndroidManifest.xml
           test -f app/src/main/java/id/pakkom/exambro/MainActivity.java
+          grep -q 'versionName = "5.1.0"' app/build.gradle.kts
+          echo "PakKom Exambro V5.1 structure OK"
 
       - name: Build debug APK
+        shell: bash
         run: gradle clean :app:assembleDebug --no-daemon --stacktrace
 
-      - name: Verify APK
-        run: test -f app/build/outputs/apk/debug/app-debug.apk
+      - name: Verify and rename APK
+        shell: bash
+        run: |
+          set -e
+          test -f app/build/outputs/apk/debug/app-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk PakKom-Exambro-V5.1-debug.apk
+          ls -lh PakKom-Exambro-V5.1-debug.apk
 
-      - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk PakKom-Exambro-V5.0-debug.apk
-
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PakKom-Exambro-V5.0-APK
-          path: PakKom-Exambro-V5.0-debug.apk
+          name: PakKom-Exambro-V5.1-APK
+          path: PakKom-Exambro-V5.1-debug.apk
           if-no-files-found: error
           retention-days: 14
