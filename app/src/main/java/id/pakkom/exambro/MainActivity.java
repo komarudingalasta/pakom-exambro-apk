@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         s.setSupportZoom(false);
         s.setBuiltInZoomControls(false);
         s.setDisplayZoomControls(false);
-        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.2.2");
+        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.2.3");
         webView.setBackgroundColor(Color.WHITE);
         webView.addJavascriptInterface(new ExamBridge(), "PakKomExambro");
         webView.setWebChromeClient(new WebChromeClient());
@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
         status.setText(
                 "Internet: " + (hasValidatedInternet() ? "Terhubung" : "Tidak terhubung") +
                 "\nMode ujian: " + (examActive ? "Aktif" : "Tidak aktif") +
-                "\nPakKom Exambro V5.2.2"
+                "\nPakKom Exambro V5.2.3"
         );
         status.setTextSize(14);
         status.setTextColor(getColor(R.color.muted));
@@ -390,13 +390,13 @@ public class MainActivity extends AppCompatActivity {
                             ? "Terhubung dan tervalidasi ✓"
                             : "Belum terhubung/tervalidasi !") +
                     "\nMode ujian: " + (examActive ? "Aktif" : "Tidak aktif") +
-                    "\nPakKom Exambro V5.2.2"
+                    "\nPakKom Exambro V5.2.3"
             );
         });
 
         info.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Info PakKom Exambro")
-                .setMessage("Versi 5.2.2\nAnti-screenshot: Aktif\nMode ujian: " +
+                .setMessage("Versi 5.2.3\nAnti-screenshot: Aktif\nMode ujian: " +
                         (examActive ? "Aktif" : "Tidak aktif") +
                         "\n\nWeb utama: PakKom Exambro")
                 .setPositiveButton("OK", null)
@@ -425,26 +425,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showStudentEmergencyExit() {
-        if (!examActive) return;
-        final String[] reasons = {
-                "Aplikasi/halaman bermasalah", "Koneksi bermasalah",
-                "Perangkat bermasalah", "Atas arahan guru", "Lainnya"
+        if (!examActive) {
+            Toast.makeText(this, "Mode ujian tidak sedang aktif.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final float density = getResources().getDisplayMetrics().density;
+        int pad = (int)(18 * density);
+
+        LinearLayout panel = new LinearLayout(this);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setPadding(pad, (int)(4*density), pad, (int)(4*density));
+
+        TextView info = new TextView(this);
+        info.setText("Pilih alasan keluar darurat:");
+        info.setTextSize(14);
+        info.setTextColor(getColor(R.color.text));
+        info.setPadding(0, 0, 0, (int)(12*density));
+        panel.addView(info);
+
+        String[] reasons = new String[] {
+                "Aplikasi/halaman bermasalah",
+                "Koneksi bermasalah",
+                "Perangkat bermasalah",
+                "Atas arahan guru",
+                "Lainnya"
         };
-        final int[] selected = {-1};
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("⚠ Keluar Darurat")
                 .setMessage("Gunakan hanya jika ujian tidak dapat dilanjutkan. Refresh halaman terlebih dahulu bila memungkinkan.")
-                .setSingleChoiceItems(reasons, -1, (d, which) -> selected[0] = which)
-                .setNegativeButton("Batal", null).setPositiveButton("Lanjutkan", null).create();
-        dialog.setOnShowListener(v -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(btn -> {
-            if (selected[0] < 0) {
-                Toast.makeText(this, "Pilih alasan keluar terlebih dahulu.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String reason = reasons[selected[0]];
-            dialog.dismiss();
-            confirmStudentEmergencyExit(reason);
-        }));
+                .setView(panel)
+                .setNegativeButton("Batal", null)
+                .create();
+
+        for (String reason : reasons) {
+            Button reasonButton = createHelpButton(reason);
+            panel.addView(reasonButton);
+            reasonButton.setOnClickListener(v -> {
+                dialog.dismiss();
+                confirmStudentEmergencyExit(reason);
+            });
+        }
+
         dialog.show();
     }
 
@@ -782,7 +805,7 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public String getAppVersion() {
-            return "5.2.2";
+            return "5.2.3";
         }
     }
 }

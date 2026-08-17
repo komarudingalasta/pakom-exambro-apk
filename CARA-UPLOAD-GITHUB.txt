@@ -1,16 +1,15 @@
-PAKKOM EXAMBRO V5.2.2
+PAKKOM EXAMBRO V5.2.3
 
 PERBAIKAN:
-Keluar Darurat sekarang langsung:
-stopLockTask -> pulihkan navigation bar -> buka Home -> tutup Exambro.
+Pilihan alasan Keluar Darurat sekarang berupa tombol besar, bukan radio list.
 
 UPLOAD:
-1. Ekstrak ZIP GitHub Root.
+1. Ekstrak GitHub Root ZIP.
 2. Replace isi repository pakkom-exambro-android.
 3. Commit/push.
-4. GitHub > Actions > Build PakKom Exambro V5.2.2 APK.
+4. GitHub > Actions > Build PakKom Exambro V5.2.3 APK.
 5. Run workflow.
-6. Download artifact PakKom-Exambro-V5.2.2-APK.
+6. Download artifact PakKom-Exambro-V5.2.3-APK.
 
 PIN GURU: 2468
 WEB: https://komarudingalasta.github.io/pakkom-exambro/
