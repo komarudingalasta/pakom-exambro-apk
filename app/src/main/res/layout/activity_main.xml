@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="PakKom Exambro • V5.2.1"
+                android:text="PakKom Exambro • V5.2.2"
                 android:textColor="@color/muted"
                 android:textSize="12sp" />
         </LinearLayout>

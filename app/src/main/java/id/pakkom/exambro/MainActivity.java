@@ -3,6 +3,7 @@ package id.pakkom.exambro;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         s.setSupportZoom(false);
         s.setBuiltInZoomControls(false);
         s.setDisplayZoomControls(false);
-        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.2.1");
+        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.2.2");
         webView.setBackgroundColor(Color.WHITE);
         webView.addJavascriptInterface(new ExamBridge(), "PakKomExambro");
         webView.setWebChromeClient(new WebChromeClient());
@@ -316,8 +317,14 @@ public class MainActivity extends AppCompatActivity {
         examActive = false;
 
         webView.stopLoading();
-        stopLockTaskSafely();
+        try { stopLockTask(); } catch (Exception ignored) { }
         exitImmersiveMode();
+        try {
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.addCategory(Intent.CATEGORY_HOME);
+            home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(home);
+        } catch (Exception ignored) { }
         finishAndRemoveTask();
     }
 
@@ -349,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
         status.setText(
                 "Internet: " + (hasValidatedInternet() ? "Terhubung" : "Tidak terhubung") +
                 "\nMode ujian: " + (examActive ? "Aktif" : "Tidak aktif") +
-                "\nPakKom Exambro V5.2.1"
+                "\nPakKom Exambro V5.2.2"
         );
         status.setTextSize(14);
         status.setTextColor(getColor(R.color.muted));
@@ -383,13 +390,13 @@ public class MainActivity extends AppCompatActivity {
                             ? "Terhubung dan tervalidasi ✓"
                             : "Belum terhubung/tervalidasi !") +
                     "\nMode ujian: " + (examActive ? "Aktif" : "Tidak aktif") +
-                    "\nPakKom Exambro V5.2.1"
+                    "\nPakKom Exambro V5.2.2"
             );
         });
 
         info.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Info PakKom Exambro")
-                .setMessage("Versi 5.2.1\nAnti-screenshot: Aktif\nMode ujian: " +
+                .setMessage("Versi 5.2.2\nAnti-screenshot: Aktif\nMode ujian: " +
                         (examActive ? "Aktif" : "Tidak aktif") +
                         "\n\nWeb utama: PakKom Exambro")
                 .setPositiveButton("OK", null)
@@ -451,17 +458,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void studentEmergencyExit(String reason) {
-        prefs.edit().putString("last_emergency_exit_reason", reason)
+        prefs.edit()
+                .putString("last_emergency_exit_reason", reason)
                 .putLong("last_emergency_exit_time", System.currentTimeMillis())
-                .putBoolean(KEY_EXAM_ACTIVE, false).remove(KEY_LAST_URL).apply();
+                .putBoolean(KEY_EXAM_ACTIVE, false)
+                .remove(KEY_LAST_URL)
+                .apply();
+
         examActive = false;
-        webView.stopLoading();
-        stopLockTaskSafely();
-        exitImmersiveMode();
-        new AlertDialog.Builder(this).setCancelable(false)
-                .setTitle("Mode Ujian Telah Dilepas")
-                .setMessage("Keluar darurat berhasil. Segera laporkan kepada guru/pengawas.")
-                .setPositiveButton("Tutup Exambro", (d, w) -> finishAndRemoveTask()).show();
+
+        try {
+            webView.stopLoading();
+        } catch (Exception ignored) { }
+
+        // Lepaskan Lock Task tanpa bergantung pada pemeriksaan state.
+        // Beberapa perangkat tidak melaporkan state dengan konsisten.
+        try {
+            stopLockTask();
+        } catch (Exception ignored) { }
+
+        // Pulihkan system UI dan hapus flag fullscreen jika ada.
+        try {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            exitImmersiveMode();
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        } catch (Exception ignored) { }
+
+        Toast.makeText(
+                this,
+                "Keluar darurat: mode ujian dilepas. Segera laporkan kepada guru.",
+                Toast.LENGTH_LONG
+        ).show();
+
+        // Beri Android waktu singkat untuk memulihkan navigation bar setelah stopLockTask.
+        handler.postDelayed(() -> {
+            try {
+                Intent home = new Intent(Intent.ACTION_MAIN);
+                home.addCategory(Intent.CATEGORY_HOME);
+                home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(home);
+            } catch (Exception ignored) { }
+
+            try {
+                finishAndRemoveTask();
+            } catch (Exception e) {
+                finish();
+            }
+        }, 350);
     }
 
     private void showTeacherMenu() {
@@ -739,7 +782,7 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public String getAppVersion() {
-            return "5.2.1";
+            return "5.2.2";
         }
     }
 }

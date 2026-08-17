@@ -1,27 +1,22 @@
-# PakKom Exambro V5.2.1
+# PakKom Exambro V5.2.2
 
-Perbaikan khusus menu Bantuan Siswa.
+Perbaikan utama: Keluar Darurat siswa.
 
-## Bantuan Siswa
-Menu Bantuan sekarang menggunakan tombol besar vertikal yang selalu terlihat:
-1. REFRESH HALAMAN — reload WebView, mode ujian tetap aktif.
-2. CEK KONEKSI — cek internet tanpa meninggalkan ujian.
-3. INFO APLIKASI — versi/status APK.
-4. KELUAR DARURAT — selalu terlihat di bagian bawah.
+## Perubahan V5.2.2
+- Tombol KELUAR DARURAT tetap di Bantuan.
+- Setelah alasan + konfirmasi:
+  1. status sesi lokal dinonaktifkan,
+  2. WebView dihentikan,
+  3. `stopLockTask()` dipanggil langsung,
+  4. immersive/fullscreen dipulihkan,
+  5. Android diarahkan ke Home,
+  6. task Exambro ditutup.
+- Tidak lagi berhenti pada dialog "Tutup Exambro".
+- Jalur keluar guru juga memakai pelepasan Lock Task yang lebih kuat.
+- Session Recovery, Connection Recovery, Refresh siswa, dan Safe Finish web tetap tersedia.
 
-Keluar Darurat:
-- tidak memerlukan PIN siswa,
-- meminta alasan,
-- meminta konfirmasi kedua,
-- menjalankan Safe Exit (stopLockTask + pulihkan navigasi),
-- menyimpan alasan dan waktu secara lokal.
+PIN guru awal: 2468
+Web: https://komarudingalasta.github.io/pakkom-exambro/
 
-## Guru
-Tombol GURU tetap memakai PIN awal 2468.
-Ketuk logo PakKom 5x tetap menjadi akses guru cadangan.
-
-Web utama:
-https://komarudingalasta.github.io/pakkom-exambro/
-
-Bridge selesai ujian:
-PakKomExambro.finishExam()
+Catatan:
+Jika perangkat diprovision sebagai Device Owner/MDM dengan kiosk penuh, aplikasi biasa tidak selalu boleh keluar sendiri. V5.2.2 ditujukan untuk mode Lock Task/screen pinning aplikasi biasa.
