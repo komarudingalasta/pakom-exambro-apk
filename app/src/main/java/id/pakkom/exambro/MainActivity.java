@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.closeButton).setOnClickListener(v -> finishAndRemoveTask());
         findViewById(R.id.retryButton).setOnClickListener(v -> retryWeb());
+        findViewById(R.id.studentHelp).setOnClickListener(v -> showStudentHelp());
         findViewById(R.id.teacherAccess).setOnClickListener(v -> showTeacherMenu());
         findViewById(R.id.homeTeacherButton).setOnClickListener(v -> showTeacherMenu());
 
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 if (examActive) {
                     Toast.makeText(
                             MainActivity.this,
-                            "Mode ujian aktif. Gunakan AKSES GURU untuk keluar.",
+                            "Mode ujian aktif. Gunakan BANTUAN jika halaman bermasalah.",
                             Toast.LENGTH_SHORT
                     ).show();
                 } else {
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         s.setSupportZoom(false);
         s.setBuiltInZoomControls(false);
         s.setDisplayZoomControls(false);
-        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.1");
+        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.2");
         webView.setBackgroundColor(Color.WHITE);
         webView.addJavascriptInterface(new ExamBridge(), "PakKomExambro");
         webView.setWebChromeClient(new WebChromeClient());
@@ -333,6 +334,76 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl("about:blank");
         showHome();
         refreshReadiness();
+    }
+
+
+    private void showStudentHelp() {
+        String internet = hasValidatedInternet() ? "Terhubung" : "Tidak terhubung";
+        String[] items = {"Refresh halaman", "Cek koneksi", "Info aplikasi", "Keluar darurat"};
+        new AlertDialog.Builder(this)
+                .setTitle("Bantuan Ujian")
+                .setMessage("Internet: " + internet + "\nMode ujian: " +
+                        (examActive ? "Aktif" : "Tidak aktif") + "\nPakKom Exambro V5.2")
+                .setItems(items, (dialog, which) -> {
+                    if (which == 0) retryWeb();
+                    else if (which == 1) Toast.makeText(this,
+                            hasValidatedInternet() ? "Internet terhubung dan tervalidasi."
+                                    : "Internet belum terhubung/tervalidasi.", Toast.LENGTH_LONG).show();
+                    else if (which == 2) new AlertDialog.Builder(this)
+                            .setTitle("Info PakKom Exambro")
+                            .setMessage("Versi 5.2.0\nAnti-screenshot: Aktif\nMode ujian: " +
+                                    (examActive ? "Aktif" : "Tidak aktif"))
+                            .setPositiveButton("OK", null).show();
+                    else showStudentEmergencyExit();
+                })
+                .setNegativeButton("Kembali ke Ujian", null).show();
+    }
+
+    private void showStudentEmergencyExit() {
+        if (!examActive) return;
+        final String[] reasons = {
+                "Aplikasi/halaman bermasalah", "Koneksi bermasalah",
+                "Perangkat bermasalah", "Atas arahan guru", "Lainnya"
+        };
+        final int[] selected = {-1};
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Keluar Darurat")
+                .setMessage("Gunakan hanya jika ujian tidak dapat dilanjutkan pada perangkat ini.")
+                .setSingleChoiceItems(reasons, -1, (d, which) -> selected[0] = which)
+                .setNegativeButton("Batal", null).setPositiveButton("Lanjutkan", null).create();
+        dialog.setOnShowListener(v -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(btn -> {
+            if (selected[0] < 0) {
+                Toast.makeText(this, "Pilih alasan keluar terlebih dahulu.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String reason = reasons[selected[0]];
+            dialog.dismiss();
+            confirmStudentEmergencyExit(reason);
+        }));
+        dialog.show();
+    }
+
+    private void confirmStudentEmergencyExit(String reason) {
+        new AlertDialog.Builder(this)
+                .setTitle("Konfirmasi Keluar Darurat")
+                .setMessage("Ujian belum dinyatakan selesai.\n\nAlasan: " + reason +
+                        "\n\nKeluar hanya jika Anda benar-benar tidak dapat melanjutkan ujian.")
+                .setNegativeButton("Kembali", null)
+                .setPositiveButton("Keluar Darurat", (d, w) -> studentEmergencyExit(reason)).show();
+    }
+
+    private void studentEmergencyExit(String reason) {
+        prefs.edit().putString("last_emergency_exit_reason", reason)
+                .putLong("last_emergency_exit_time", System.currentTimeMillis())
+                .putBoolean(KEY_EXAM_ACTIVE, false).remove(KEY_LAST_URL).apply();
+        examActive = false;
+        webView.stopLoading();
+        stopLockTaskSafely();
+        exitImmersiveMode();
+        new AlertDialog.Builder(this).setCancelable(false)
+                .setTitle("Mode Ujian Telah Dilepas")
+                .setMessage("Keluar darurat berhasil. Segera laporkan kepada guru/pengawas.")
+                .setPositiveButton("Tutup Exambro", (d, w) -> finishAndRemoveTask()).show();
     }
 
     private void showTeacherMenu() {
@@ -610,7 +681,7 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public String getAppVersion() {
-            return "5.1.0";
+            return "5.2.0";
         }
     }
 }

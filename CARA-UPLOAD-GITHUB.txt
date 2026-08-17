@@ -1,34 +1,11 @@
-PAKKOM EXAMBRO V5.1 — CARA UPLOAD KE GITHUB
+PAKKOM EXAMBRO V5.2
 
-1. Ekstrak ZIP ini.
-2. Buka repository Android Anda: pakkom-exambro-android.
-3. Upload SEMUA ISI folder PakKomExambroV5.1 ke ROOT repository.
-   Jangan upload folder pembungkusnya jika ingin build langsung.
-4. Pastikan struktur root GitHub menjadi:
-   .github/workflows/build-apk.yml
-   app/
-   build.gradle.kts
-   settings.gradle.kts
-   gradle.properties
-   README.md
-5. Commit/push.
-6. Buka GitHub > Actions.
-7. Pilih "Build PakKom Exambro V5.1 APK".
-8. Klik Run workflow.
-9. Jika hijau, download artifact:
-   PakKom-Exambro-V5.1-APK
+1. Ekstrak ZIP GitHub Root.
+2. Replace isi repository pakkom-exambro-android.
+3. Commit/push.
+4. GitHub > Actions > Build PakKom Exambro V5.2 APK > Run workflow.
+5. Download artifact PakKom-Exambro-V5.2-APK.
 
-WEB UTAMA:
-https://komarudingalasta.github.io/pakkom-exambro/
-
-PIN GURU AWAL:
-2468
-
-AKSES GURU SAAT UJIAN:
-- Tekan "AKSES GURU" di kanan atas, atau
-- Ketuk logo PakKom 5 kali sebagai backup.
-
-CATATAN INTEGRASI WEB:
-Agar APK keluar otomatis sesudah siswa menyelesaikan ujian, web utama perlu memanggil:
-PakKomExambro.finishExam()
-setelah penyimpanan jawaban/status selesai benar-benar berhasil.
+SISWA: BANTUAN > Refresh / Cek Koneksi / Info / Keluar Darurat.
+GURU: GURU > PIN 2468. Backup: ketuk logo 5x.
+WEB: https://komarudingalasta.github.io/pakkom-exambro/

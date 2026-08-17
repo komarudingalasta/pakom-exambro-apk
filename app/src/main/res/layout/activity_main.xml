@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="PakKom Exambro • V5.1"
+                android:text="PakKom Exambro • V5.2"
                 android:textColor="@color/muted"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -211,15 +211,27 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/studentHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="BANTUAN"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/teacherAccess"
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="6dp"
-                android:text="AKSES GURU"
-                android:textColor="@color/white"
-                android:textSize="11sp"
+                android:paddingStart="6dp"
+                android:paddingEnd="4dp"
+                android:text="GURU"
+                android:textColor="#BFD3FF"
+                android:textSize="10sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
