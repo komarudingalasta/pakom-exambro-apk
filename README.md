@@ -1,16 +1,27 @@
-# PakKom Exambro V5.2
+# PakKom Exambro V5.2.1
 
-Web utama: https://komarudingalasta.github.io/pakkom-exambro/
+Perbaikan khusus menu Bantuan Siswa.
 
-## V5.2
-- Safe Exit, Session Recovery, Connection Recovery, Device Readiness Check.
-- BANTUAN SISWA: Refresh halaman, Cek koneksi, Info aplikasi, Keluar Darurat.
-- Refresh tidak melepas mode ujian.
-- Keluar Darurat meminta alasan + konfirmasi kedua, lalu Safe Exit.
-- Alasan dan waktu emergency exit disimpan lokal untuk diagnostik.
-- GURU: PIN 2468 untuk reload, kembali ke beranda, atau keluar.
-- Ketuk logo PakKom 5x tetap menjadi akses guru cadangan.
-- Anti-screenshot FLAG_SECURE.
-- Bridge web: PakKomExambro.finishExam().
+## Bantuan Siswa
+Menu Bantuan sekarang menggunakan tombol besar vertikal yang selalu terlihat:
+1. REFRESH HALAMAN — reload WebView, mode ujian tetap aktif.
+2. CEK KONEKSI — cek internet tanpa meninggalkan ujian.
+3. INFO APLIKASI — versi/status APK.
+4. KELUAR DARURAT — selalu terlihat di bagian bawah.
 
-Catatan: agar emergency exit muncul di dashboard admin, web/Firestore perlu integrasi pencatatan tambahan.
+Keluar Darurat:
+- tidak memerlukan PIN siswa,
+- meminta alasan,
+- meminta konfirmasi kedua,
+- menjalankan Safe Exit (stopLockTask + pulihkan navigasi),
+- menyimpan alasan dan waktu secara lokal.
+
+## Guru
+Tombol GURU tetap memakai PIN awal 2468.
+Ketuk logo PakKom 5x tetap menjadi akses guru cadangan.
+
+Web utama:
+https://komarudingalasta.github.io/pakkom-exambro/
+
+Bridge selesai ujian:
+PakKomExambro.finishExam()

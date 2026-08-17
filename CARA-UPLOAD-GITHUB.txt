@@ -1,11 +1,20 @@
-PAKKOM EXAMBRO V5.2
+PAKKOM EXAMBRO V5.2.1
 
+PERBAIKAN:
+Menu BANTUAN tidak lagi berupa daftar kecil.
+Sekarang ada 4 tombol besar yang selalu terlihat:
+- REFRESH HALAMAN
+- CEK KONEKSI
+- INFO APLIKASI
+- KELUAR DARURAT
+
+UPLOAD:
 1. Ekstrak ZIP GitHub Root.
-2. Replace isi repository pakkom-exambro-android.
+2. Replace seluruh isi repository pakkom-exambro-android.
 3. Commit/push.
-4. GitHub > Actions > Build PakKom Exambro V5.2 APK > Run workflow.
-5. Download artifact PakKom-Exambro-V5.2-APK.
+4. GitHub > Actions > Build PakKom Exambro V5.2.1 APK.
+5. Run workflow.
+6. Download artifact PakKom-Exambro-V5.2.1-APK.
 
-SISWA: BANTUAN > Refresh / Cek Koneksi / Info / Keluar Darurat.
-GURU: GURU > PIN 2468. Backup: ketuk logo 5x.
+PIN GURU AWAL: 2468
 WEB: https://komarudingalasta.github.io/pakkom-exambro/

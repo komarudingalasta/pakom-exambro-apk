@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         s.setSupportZoom(false);
         s.setBuiltInZoomControls(false);
         s.setDisplayZoomControls(false);
-        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.2");
+        s.setUserAgentString(s.getUserAgentString() + " PakKomExambro/5.2.1");
         webView.setBackgroundColor(Color.WHITE);
         webView.addJavascriptInterface(new ExamBridge(), "PakKomExambro");
         webView.setWebChromeClient(new WebChromeClient());
@@ -338,25 +338,83 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showStudentHelp() {
-        String internet = hasValidatedInternet() ? "Terhubung" : "Tidak terhubung";
-        String[] items = {"Refresh halaman", "Cek koneksi", "Info aplikasi", "Keluar darurat"};
-        new AlertDialog.Builder(this)
+        final float density = getResources().getDisplayMetrics().density;
+        int pad = (int) (20 * density);
+
+        LinearLayout panel = new LinearLayout(this);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setPadding(pad, (int)(8*density), pad, (int)(8*density));
+
+        TextView status = new TextView(this);
+        status.setText(
+                "Internet: " + (hasValidatedInternet() ? "Terhubung" : "Tidak terhubung") +
+                "\nMode ujian: " + (examActive ? "Aktif" : "Tidak aktif") +
+                "\nPakKom Exambro V5.2.1"
+        );
+        status.setTextSize(14);
+        status.setTextColor(getColor(R.color.muted));
+        status.setPadding(0, 0, 0, (int)(14*density));
+        panel.addView(status);
+
+        Button refresh = createHelpButton("↻  REFRESH HALAMAN");
+        Button connection = createHelpButton("●  CEK KONEKSI");
+        Button info = createHelpButton("ⓘ  INFO APLIKASI");
+        Button emergency = createHelpButton("⚠  KELUAR DARURAT");
+
+        panel.addView(refresh);
+        panel.addView(connection);
+        panel.addView(info);
+        panel.addView(emergency);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Bantuan Ujian")
-                .setMessage("Internet: " + internet + "\nMode ujian: " +
-                        (examActive ? "Aktif" : "Tidak aktif") + "\nPakKom Exambro V5.2")
-                .setItems(items, (dialog, which) -> {
-                    if (which == 0) retryWeb();
-                    else if (which == 1) Toast.makeText(this,
-                            hasValidatedInternet() ? "Internet terhubung dan tervalidasi."
-                                    : "Internet belum terhubung/tervalidasi.", Toast.LENGTH_LONG).show();
-                    else if (which == 2) new AlertDialog.Builder(this)
-                            .setTitle("Info PakKom Exambro")
-                            .setMessage("Versi 5.2.0\nAnti-screenshot: Aktif\nMode ujian: " +
-                                    (examActive ? "Aktif" : "Tidak aktif"))
-                            .setPositiveButton("OK", null).show();
-                    else showStudentEmergencyExit();
-                })
-                .setNegativeButton("Kembali ke Ujian", null).show();
+                .setView(panel)
+                .setNegativeButton("KEMBALI KE UJIAN", null)
+                .create();
+
+        refresh.setOnClickListener(v -> {
+            dialog.dismiss();
+            retryWeb();
+        });
+
+        connection.setOnClickListener(v -> {
+            status.setText(
+                    "Internet: " + (hasValidatedInternet()
+                            ? "Terhubung dan tervalidasi ✓"
+                            : "Belum terhubung/tervalidasi !") +
+                    "\nMode ujian: " + (examActive ? "Aktif" : "Tidak aktif") +
+                    "\nPakKom Exambro V5.2.1"
+            );
+        });
+
+        info.setOnClickListener(v -> new AlertDialog.Builder(this)
+                .setTitle("Info PakKom Exambro")
+                .setMessage("Versi 5.2.1\nAnti-screenshot: Aktif\nMode ujian: " +
+                        (examActive ? "Aktif" : "Tidak aktif") +
+                        "\n\nWeb utama: PakKom Exambro")
+                .setPositiveButton("OK", null)
+                .show());
+
+        emergency.setOnClickListener(v -> {
+            dialog.dismiss();
+            showStudentEmergencyExit();
+        });
+
+        dialog.show();
+    }
+
+    private Button createHelpButton(String text) {
+        Button button = new Button(this);
+        button.setText(text);
+        button.setTextSize(14);
+        button.setAllCaps(false);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) (54 * getResources().getDisplayMetrics().density)
+        );
+        lp.setMargins(0, 0, 0, (int)(8 * getResources().getDisplayMetrics().density));
+        button.setLayoutParams(lp);
+        return button;
     }
 
     private void showStudentEmergencyExit() {
@@ -367,8 +425,8 @@ public class MainActivity extends AppCompatActivity {
         };
         final int[] selected = {-1};
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Keluar Darurat")
-                .setMessage("Gunakan hanya jika ujian tidak dapat dilanjutkan pada perangkat ini.")
+                .setTitle("⚠ Keluar Darurat")
+                .setMessage("Gunakan hanya jika ujian tidak dapat dilanjutkan. Refresh halaman terlebih dahulu bila memungkinkan.")
                 .setSingleChoiceItems(reasons, -1, (d, which) -> selected[0] = which)
                 .setNegativeButton("Batal", null).setPositiveButton("Lanjutkan", null).create();
         dialog.setOnShowListener(v -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(btn -> {
@@ -681,7 +739,7 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public String getAppVersion() {
-            return "5.2.0";
+            return "5.2.1";
         }
     }
 }
